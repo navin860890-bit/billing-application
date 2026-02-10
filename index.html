@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel's Naveen</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fas fa-utensils"></i> Hotel Naveen</h1>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-tab="menu">
+                    <i class="fas fa-book"></i> Menu
+                </button>
+                <button class="tab-btn" data-tab="cart">
+                    <i class="fas fa-shopping-cart"></i> Cart 
+                    <span class="cart-count">0</span>
+                </button>
+                <button class="tab-btn" data-tab="reports">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </button>
+            </nav>
+        </header>
+
+        <!-- Menu Tab -->
+        <section id="menu-tab" class="tab-content active">
+            <div class="menu-header">
+                <h2>Menu Items</h2>
+                <button class="btn btn-primary" id="add-menu-btn">
+                    <i class="fas fa-plus"></i> Add Item
+                </button>
+            </div>
+            <div class="menu-grid" id="menu-grid"></div>
+        </section>
+
+        <!-- Cart Tab -->
+        <section id="cart-tab" class="tab-content">
+            <div class="cart-header">
+                <h2>Cart</h2>
+                <button class="btn btn-danger" id="clear-cart-btn">
+                    <i class="fas fa-trash"></i> Clear Cart
+                </button>
+            </div>
+            <div class="cart-container">
+                <div class="cart-items" id="cart-items">
+                    <p class="empty-cart">Cart is empty</p>
+                </div>
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Total:</span>
+                        <span id="total-amount">₹0</span>
+                    </div>
+                    <button class="btn btn-success btn-large" id="pay-now-btn">
+                        <i class="fas fa-qrcode"></i> Pay Now
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reports Tab -->
+        <section id="reports-tab" class="tab-content">
+            <div class="reports-header">
+                <h2>Monthly Sales Report</h2>
+                <div class="date-selector">
+                    <input type="month" id="report-month" class="month-input">
+                    <button class="btn btn-primary" id="generate-report-btn">
+                        <i class="fas fa-search"></i> Generate Report
+                    </button>
+                </div>
+            </div>
+            <div class="reports-content" id="reports-content">
+                <p class="empty-report">Select a month to generate report</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bill / QR Modal -->
+    <div id="bill-modal" class="modal">
+        <div class="modal-content bill-modal-content">
+            <div class="modal-header">
+                <h3>Bill</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="bill-content">
+                <div class="bill-header">
+                    <h2>Hotel Naveen</h2>
+                    <p id="bill-date"></p>
+                </div>
+
+                <div class="bill-items" id="bill-items-list"></div>
+
+                <div class="bill-total">
+                    <strong>Total: <span id="bill-total-amount">₹0</span></strong>
+                </div>
+
+                <div class="qr-code-section">
+                    <h4>Scan to Pay</h4>
+                    <div id="qrcode"></div>
+                    <p class="qr-note">Scan using PhonePe / GPay / Paytm</p>
+                </div>
+
+                <div class="bill-actions">
+                    <!-- UPDATED BUTTON -->
+                    <button class="btn btn-success" id="print-bill-btn">
+                        <i class="fas fa-check"></i> Paid & Print
+                    </button>
+                    <button class="btn btn-secondary" id="close-bill-btn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/menu.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/billing.js"></script>
+    <script src="js/sales.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- ✅ REQUIRED FOR UPI QR -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+</body>
+</html>
+
