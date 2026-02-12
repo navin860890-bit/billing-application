@@ -1,13 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "bill-website"
-        CONTAINER_NAME = "bill-website"
-        HOST_PORT = "9091"
-        CONTAINER_PORT = "80"
-    }
-
     stages {
 
         stage('Checkout Code') {
@@ -27,29 +20,27 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                bat "docker build -t %IMAGE_NAME% ."
+                bat 'docker build -t bill-website .'
             }
         }
 
         stage('Stop & Remove Old Container') {
             steps {
                 echo 'Stopping old container if exists...'
-                bat '''
-                docker stop %CONTAINER_NAME% || exit 0
-                docker rm %CONTAINER_NAME% || exit 0
-                '''
+                bat 'docker stop bill-website || exit 0'
+                bat 'docker rm bill-website || exit 0'
             }
         }
 
         stage('Run New Container') {
             steps {
                 echo 'Running new container...'
-                bat """
+                bat '''
                 docker run -d ^
-                  -p %HOST_PORT%:%CONTAINER_PORT% ^
-                  --name %CONTAINER_NAME% ^
-                  %IMAGE_NAME%
-                """
+                -p 9091:80 ^
+                --name bill-website ^
+                bill-website
+                '''
             }
         }
     }
