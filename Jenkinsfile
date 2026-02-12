@@ -13,25 +13,22 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo "Building Docker image..."
-                sh 'docker build -t $IMAGE_NAME .'
+                bat 'docker build -t %IMAGE_NAME% .'
             }
         }
 
         stage('Stop & Remove Old Container') {
             steps {
                 echo "Removing old container if exists..."
-                sh 'docker rm -f $CONTAINER_NAME || true'
+                bat 'docker rm -f %CONTAINER_NAME% || exit 0'
             }
         }
 
         stage('Run New Container') {
             steps {
                 echo "Starting new container..."
-                sh '''
-                docker run -d \
-                  -p $HOST_PORT:$CONTAINER_PORT \
-                  --name $CONTAINER_NAME \
-                  $IMAGE_NAME
+                bat '''
+                docker run -d -p %HOST_PORT%:%CONTAINER_PORT% --name %CONTAINER_NAME% %IMAGE_NAME%
                 '''
             }
         }
