@@ -10,31 +10,23 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/<your-username>/<your-repo>.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
-                sh '''
-                docker build -t $IMAGE_NAME .
-                '''
+                echo "Building Docker image..."
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Stop & Remove Old Container') {
             steps {
-                sh '''
-                docker rm -f $CONTAINER_NAME || true
-                '''
+                echo "Removing old container if exists..."
+                sh 'docker rm -f $CONTAINER_NAME || true'
             }
         }
 
         stage('Run New Container') {
             steps {
+                echo "Starting new container..."
                 sh '''
                 docker run -d \
                   -p $HOST_PORT:$CONTAINER_PORT \
@@ -47,10 +39,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Deployment successful! App running on http://localhost:${HOST_PORT}"
+            echo "✅ App deployed successfully at http://localhost:${HOST_PORT}"
         }
         failure {
-            echo "❌ Deployment failed. Check logs."
+            echo "❌ Deployment failed"
         }
     }
 }
