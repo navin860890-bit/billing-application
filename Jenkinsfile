@@ -35,7 +35,7 @@ pipeline {
         stage('Run New Container') {
             steps {
                 echo 'Running new container...'
-                bat 'docker run -d --name my-billingapp -p 8080:8080 bill-website:latest'
+                bat 'docker run -d --name my-billingapp -p 9090:8080 bill-website:latest'
             }
         }
 
