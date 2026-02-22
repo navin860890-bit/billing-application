@@ -1,13 +1,12 @@
+# Use official Nginx image
 FROM nginx:alpine
 
-# Remove default nginx website
-RUN rm -rf /usr/share/nginx/html/*
+# Copy your web assets into Nginx's default directory
+COPY ./index.html /usr/share/nginx/html/
+COPY ./css /usr/share/nginx/html/css
+COPY ./js /usr/share/nginx/html/js
+COPY ./images /usr/share/nginx/html/images
 
-# Copy static files to nginx web root
-COPY . /usr/share/nginx/html
-
-# Expose port 80
+# Expose port 80 inside the container
 EXPOSE 80
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]

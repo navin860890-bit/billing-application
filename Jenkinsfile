@@ -1,59 +1,46 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                echo 'Checking out source code...'
-                checkout scm
-            }
-        }
+    environment {
+        IMAGE_NAME = "my-web-app"
+        CONTAINER_NAME = "my-web-app-container"
+        PORT = "9090"
+    }
 
-        stage('Docker Check') {
+    stages {
+        stage('Checkout') {
             steps {
-                bat 'docker version'
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo 'Building Docker image...'
-                bat 'docker build -t bill-website:latest .'
+                script {
+                    sh "docker build -t ${IMAGE_NAME}:latest ."
+                }
             }
         }
 
-        stage('Stop & Remove Old Container') {
+        stage('Run Docker Container') {
             steps {
-                echo 'Stopping old container if exists...'
-                bat '''
-                docker stop my-billingapp || echo "No container to stop"
-                docker rm my-billingapp || echo "No container to remove"
-                '''
-            }
-        }
-
-        stage('Run New Container') {
-            steps {
-                echo 'Running new container...'
-                bat 'docker run -d --name my-billingapp -p 9090:8080 bill-website:latest'
-            }
-        }
-
-        stage('Health Check') {
-            steps {
-                echo 'Checking if application is responding...'
-                // Adjust the endpoint if your app exposes a health route
-                bat 'curl http://localhost:8080 || echo "Health check failed"'
+                script {
+                    // Stop and remove container if it already exists
+                    sh """
+                        if [ \$(docker ps -aq -f name=${CONTAINER_NAME}) ]; then
+                            docker rm -f ${CONTAINER_NAME}
+                        fi
+                    """
+                    // Run new container on port 9090
+                    sh "docker run -d --name ${CONTAINER_NAME} -p ${PORT}:80 ${IMAGE_NAME}:latest"
+                }
             }
         }
     }
 
     post {
-        failure {
-            echo "❌ CI/CD Pipeline failed. Check logs."
-        }
-        success {
-            echo "✅ CI/CD Pipeline completed successfully."
+        always {
+            echo "Pipeline finished. Container '${CONTAINER_NAME}' should be running on port ${PORT}."
         }
     }
 }
