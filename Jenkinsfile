@@ -1,13 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "my-web-app"
-        CONTAINER_NAME = "my-web-app-container"
-        HOST_PORT = "9090"
-        CONTAINER_PORT = "80"
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -17,7 +10,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:latest ."
+                sh "docker build -t my-web-app:latest ."
             }
         }
 
@@ -25,21 +18,14 @@ pipeline {
             steps {
                 script {
                     sh """
-                        if [ \$(docker ps -aq -f name=${CONTAINER_NAME}) ]; then
-                            docker rm -f ${CONTAINER_NAME}
+                        if [ \$(docker ps -aq -f name=my-web-app-container) ]; then
+                            docker rm -f my-web-app-container
                         fi
-                        docker run -d --name ${CONTAINER_NAME} -p ${HOST_PORT}:${CONTAINER_PORT} ${IMAGE_NAME}:latest
+                        docker run -d --name my-web-app-container -p 9090:80 my-web-app:latest
                     """
                 }
             }
         }
     }
-
-    post {
-        always {
-            echo "Pipeline finished. App should be available at http://localhost:${HOST_PORT}"
-        }
-    }
 }
-
 
