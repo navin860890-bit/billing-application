@@ -1,12 +1,9 @@
-# Use official Nginx image
+# Use lightweight NGINX base image
 FROM nginx:alpine
 
-# Copy your web assets into Nginx's default directory
-COPY ./index.html /usr/share/nginx/html/
-COPY ./css /usr/share/nginx/html/css
-COPY ./js /usr/share/nginx/html/js
-COPY ./images /usr/share/nginx/html/images
+# Copy your static site files into NGINX's default web root
+COPY ./ /usr/share/nginx/html
 
-# Expose port 80 inside the container
+# Expose HTTP port
 EXPOSE 80
 

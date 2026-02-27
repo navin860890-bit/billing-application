@@ -10,19 +10,21 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t my-web-app:latest ."
+                script {
+                    // Build image (disable BuildKit warnings if needed)
+                    sh 'DOCKER_BUILDKIT=0 docker build -t my-frontend-app .'
+                }
             }
         }
 
         stage('Run Docker Container') {
             steps {
                 script {
-                    sh """
-                        if [ \$(docker ps -aq -f name=my-web-app-container) ]; then
-                            docker rm -f my-web-app-container
-                        fi
-                        docker run -d --name my-web-app-container -p 9090:80 my-web-app:latest
-                    """
+                    // Stop and remove old container if it exists
+                    sh 'docker rm -f my-frontend-app-container || true'
+
+                    // Run new container mapping host port 8080 to container port 80
+                    sh 'docker run -d --name my-frontend-app-container -p 8080:80 my-frontend-app'
                 }
             }
         }
