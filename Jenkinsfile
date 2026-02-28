@@ -1,10 +1,5 @@
 pipeline {
     agent any
-    
-    environment {
-        IMAGE_NAME = "naveen-website"
-        CONTAINER_NAME = "naveen-site"
-    }
 
     stages {
 
@@ -16,19 +11,19 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                bat 'docker build -t bill-website .'
             }
         }
 
         stage('Remove Old Container') {
             steps {
-                sh 'docker rm -f $CONTAINER_NAME || true'
+                bat 'docker rm -f myapp || exit 0'
             }
         }
 
         stage('Run Container') {
             steps {
-                sh 'docker run -d -p 9090:80 --name $CONTAINER_NAME $IMAGE_NAME'
+                bat 'docker run -d -p 9090:8080 --name myapp bill-website'
             }
         }
     }
