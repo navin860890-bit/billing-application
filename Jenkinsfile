@@ -5,26 +5,34 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                checkout scm
+                git 'https://github.com/navin860890-bit/billing-application.git'
+            }
+        }
+
+        stage('Check Docker') {
+            steps {
+                sh 'docker --version'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t bill-website .'
+                sh 'docker build -t bill-website .'
             }
         }
 
-        stage('Remove Old Container') {
+        stage('Stop Old Container') {
             steps {
-                bat 'docker rm -f myapp || exit 0'
+                sh 'docker stop bill-container || true'
+                sh 'docker rm bill-container || true'
             }
         }
 
-        stage('Run Container') {
+        stage('Run New Container') {
             steps {
-                bat 'docker run -d -p 9090:8080 --name myapp bill-website'
+                sh 'docker run -d -p 8081:80 --name bill-container bill-website'
             }
         }
+
     }
 }
