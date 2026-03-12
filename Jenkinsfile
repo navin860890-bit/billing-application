@@ -11,26 +11,26 @@ pipeline {
 
         stage('Check Docker') {
             steps {
-                bat 'docker --version'
+                sh 'docker --version'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t bill-website .'
+                sh 'docker build -t bill-website .'
             }
         }
 
         stage('Stop Old Container') {
             steps {
-                bat 'docker stop bill-container || exit 0'
-                bat 'docker rm bill-container || exit 0'
+                sh 'docker stop bill-container || true'
+                sh 'docker rm bill-container || true'
             }
         }
 
         stage('Run Container') {
             steps {
-                bat 'docker run -d -p 8081:80 --name bill-container bill-website'
+                sh 'docker run -d -p 8081:80 --name bill-container bill-website'
             }
         }
 
