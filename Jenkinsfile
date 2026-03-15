@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t bill-website .'
+                sh "docker build -t bill-website:${BUILD_NUMBER} ."
             }
         }
 
@@ -30,7 +30,7 @@ pipeline {
 
         stage('Run Container') {
             steps {
-                sh 'docker run -d -p 8081:80 --name bill-container bill-website'
+                sh "docker run -d -p 8081:80 --name bill-container bill-website:${BUILD_NUMBER}"
             }
         }
 
