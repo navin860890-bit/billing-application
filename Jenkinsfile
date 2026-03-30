@@ -2,6 +2,14 @@ pipeline {
     agent any
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
+    agent any
+
+    stages {
 
         stage('Checkout Code') {
             steps {
